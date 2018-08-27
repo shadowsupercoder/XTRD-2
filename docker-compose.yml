@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: 'xtrd_api'
+      POSTGRES_USER: 'xtrd_api'
+      POSTGRES_PASSWORD: 'xtrd_api'
+    volumes:
+      - ./docker-data/postgresql/:/var/lib/postgresql/data
+    ports:
+      - '5434:5432'
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
