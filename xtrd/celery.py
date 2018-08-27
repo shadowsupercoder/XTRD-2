@@ -17,7 +17,7 @@ midnight, 3am, 6am, 9am, noon, 3pm, 6pm, 9pm.
 app.conf.beat_schedule = {
     'parse-data-every-three-hours': {
         'task': 'api.tasks.parse_data',
-        # 'schedule': crontab(minute=0, hour='*/3'),
-        'schedule': crontab(),
+        'schedule': crontab(minute=0, hour='*/3'),
+        # 'schedule': crontab(),
     },
 }
