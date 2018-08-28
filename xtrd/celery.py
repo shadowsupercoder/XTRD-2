@@ -4,8 +4,8 @@ from celery.schedules import crontab
  
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'xtrd.settings')
  
-app = Celery('xtrd', broker='redis://redis:6379/0')
-app.config_from_object('django.conf:settings')
+app = Celery('xtrd')
+app.config_from_object('django.conf:settings', namespace='CELERY')
  
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
