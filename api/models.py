@@ -13,17 +13,17 @@ class XTRDInformation(models.Model):
         auto_now_add=True,
         editable=False)
     price_usd = models.DecimalField(
-    	max_digits=1000,
-    	decimal_places=5,
-    	verbose_name='USD')
+        max_digits=1000,
+        decimal_places=5,
+        verbose_name='USD')
     price_eth = models.DecimalField(
         max_digits=1000,
         decimal_places=18,
         verbose_name='ETH')
     volume = models.DecimalField(
-    	max_digits=1000,
-    	decimal_places=18,
-    	verbose_name='Volume')
+        max_digits=1000,
+        decimal_places=18,
+        verbose_name='Volume')
 
     # TODO trade volume
 
@@ -31,7 +31,7 @@ class XTRDInformation(models.Model):
         abstract = True
 
     def get_market_cap(self):
-    	return TOTAL_SUPPLY * self.price
+        return TOTAL_SUPPLY * self.price_usd
 
     @property
     def supply(self):
@@ -45,4 +45,14 @@ class Etherscan(XTRDInformation):
 
 class Coinmarketcap(XTRDInformation):
     """XTRD Information on Coinmarketcap"""
+    pass
+
+
+class Idex(XTRDInformation):
+    """XTRD Information on IDEX"""
+    pass
+
+
+class EtherDelta(XTRDInformation):
+    """XTRD Information on EtherDelta"""
     pass

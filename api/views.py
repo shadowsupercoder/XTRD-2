@@ -1,3 +1,5 @@
+import requests
+
 from django.shortcuts import render
 from django.views.generic.list import ListView
 
@@ -9,13 +11,13 @@ from rest_framework.views import APIView
 
 from .serializers import BasicSerializer, MarketSerializer
 
-from .models import Etherscan, Coinmarketcap
+from .models import Etherscan, Coinmarketcap, Idex, TOTAL_SUPPLY
 
 
 class CoinmarketcapListView(ListView):
 
     model = Coinmarketcap
-    # template_name = "api/xtrd_parse.html"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data'] = Coinmarketcap.objects.last()
@@ -40,13 +42,15 @@ class BasicView(APIView):
 
     @staticmethod
     def get(request):
+        basic = Coinmarketcap.objects.latest('date')
         data = {
-            "supply": 952457688.00,
+            "supply": TOTAL_SUPPLY,
             "price": {
-                "usd": 0.01,
-                "eth": 0.0001
+                "usd": format(basic.price_usd, '.8f'),
+                "eth": format(basic.price_eth, '.18f')
             },
-            "volume": 10000.00
+            "volume": basic.volume,
+            'market_cap': basic.get_market_cap()
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -59,19 +63,32 @@ class MarketsView(APIView):
 
     @staticmethod
     def get(request):
-        data = [{
-            "name": "Exchange_1",
-            "volume": 3000,
-            "share": 50.00
+        idex = Idex.objects.latest('date')
+        # ether_delta = EtherDelta.objects.latest('date')
+        data = [
+        {
+            "name": "IDEX",
+            "supply": TOTAL_SUPPLY,
+            "volume": idex.volume,
+            "price": {
+                "usd": format(idex.price_usd, '.8f'),
+                "eth": format(idex.price_eth, '.18f')
             },
-            {
-                "name": "Exchange_2",
-                "volume": 2000,
-                "share": 30.00
-            },
-            {
-                "name": "Exchange_3",
-                "volume": 1000,
-                "share": 20.00
-            }]
+            'market_cap': idex.get_market_cap()
+        },
+        # {
+        #     "name": "EtherDelta",
+        #     "volume": ether_delta.volume,
+        #     "price": {
+        #         "usd": ether_delta.price_usd,
+        #         "eth": ether_delta.price_eth
+        #     },
+        #     'market_cap': ether_delta.get_market_cap()
+        # },
+        # {
+        #     "name": "Exchange_3",
+        #     "volume": 1000,
+        #     "share": 20.00
+        # }
+        ]
         return Response(data, status=status.HTTP_200_OK)
