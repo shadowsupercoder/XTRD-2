@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'xtrd_api',
         'USER': 'xtrd_api',
         'PASSWORD': 'xtrd_api',
-        'HOST': '127.0.0.1',
+        'HOST': '142.93.240.64',
         'PORT': '5432',
     }
 }
@@ -149,3 +149,8 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
