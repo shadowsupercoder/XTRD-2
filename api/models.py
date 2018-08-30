@@ -38,8 +38,8 @@ class XTRDInformation(models.Model):
         return TOTAL_SUPPLY
 
 
-class Etherscan(XTRDInformation):
-    """XTRD Information on Etherscan"""
+class TokenJar(XTRDInformation):
+    """XTRD Information on TokenJar"""
     pass
 
 
@@ -53,6 +53,6 @@ class Idex(XTRDInformation):
     pass
 
 
-class EtherDelta(XTRDInformation):
-    """XTRD Information on EtherDelta"""
+class Coinsuper(XTRDInformation):
+    """XTRD Information on Coinsuper"""
     pass

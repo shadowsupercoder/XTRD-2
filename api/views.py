@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 
 from .serializers import BasicSerializer, MarketSerializer
 
-from .models import Etherscan, Coinmarketcap, Idex, TOTAL_SUPPLY
+from .models import Coinmarketcap, Idex, TokenJar, Coinsuper, TOTAL_SUPPLY
 
 
 class CoinmarketcapListView(ListView):
@@ -63,32 +63,43 @@ class MarketsView(APIView):
 
     @staticmethod
     def get(request):
-        idex = Idex.objects.latest('date')
-        # ether_delta = EtherDelta.objects.latest('date')
-        data = [
-        {
-            "name": "IDEX",
-            "supply": TOTAL_SUPPLY,
-            "volume": idex.volume,
-            "price": {
-                "usd": format(idex.price_usd, '.8f'),
-                "eth": format(idex.price_eth, '.18f')
+        try:
+            idex = Idex.objects.latest('date')
+            coin_super = Coinsuper.objects.latest('date')
+            jar = TokenJar.objects.latest('date')
+            data = [
+            {
+                "name": "IDEX",
+                # "supply": TOTAL_SUPPLY,
+                "volume": idex.volume,
+                "price": {
+                    "usd": format(idex.price_usd, '.8f'),
+                    "eth": format(idex.price_eth, '.18f')
+                },
+                'market_cap': idex.get_market_cap()
             },
-            'market_cap': idex.get_market_cap()
-        },
-        # {
-        #     "name": "EtherDelta",
-        #     "volume": ether_delta.volume,
-        #     "price": {
-        #         "usd": ether_delta.price_usd,
-        #         "eth": ether_delta.price_eth
-        #     },
-        #     'market_cap': ether_delta.get_market_cap()
-        # },
-        # {
-        #     "name": "Exchange_3",
-        #     "volume": 1000,
-        #     "share": 20.00
-        # }
-        ]
-        return Response(data, status=status.HTTP_200_OK)
+            {
+                "name": "Coinsuper",
+                # "supply": TOTAL_SUPPLY,
+                "volume": coin_super.volume,
+                "price": {
+                    "usd": format(coin_super.price_usd, '.8f'),
+                    "eth": format(coin_super.price_eth, '.18f')
+                },
+                'market_cap': coin_super.get_market_cap()
+            },
+            {
+                "name": "TokenJar",
+                # "supply": TOTAL_SUPPLY,
+                "volume": jar.volume,
+                "price": {
+                    "usd": format(jar.price_usd, '.8f'),
+                    "eth": format(jar.price_eth, '.18f')
+                },
+                'market_cap': jar.get_market_cap()
+            }
+            ]
+            return Response(data, status=status.HTTP_200_OK)
+        except:
+            data = []
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
