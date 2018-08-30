@@ -130,7 +130,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-REDIS_URL = 'redis://redis:6379'
+REDIS_URL = 'http://142.93.240.64:6379'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
